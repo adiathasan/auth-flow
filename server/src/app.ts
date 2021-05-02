@@ -88,7 +88,7 @@ const typeDefs = gql`
 	}
 
 	type Query {
-		user(id: String!): User!
+		user(id: ID!): User!
 		users: [User!]!
 	}
 
