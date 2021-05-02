@@ -10,6 +10,7 @@ export interface Auth {
 	token: string;
 	userId: string;
 	expiresIn: number;
+	__typename: string;
 }
 
 export interface Store {

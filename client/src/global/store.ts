@@ -2,13 +2,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { userLoginReducer } from './reducers/authReducers';
+import { authReducer } from './reducers/authReducers';
 import { Store } from './types';
 
-// import { Store } from './types';
-
 const reducer = combineReducers({
-	auth: userLoginReducer,
+	auth: authReducer,
 });
 
 export const _AUTH = 'auth';

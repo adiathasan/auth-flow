@@ -1,14 +1,19 @@
 import React from 'react';
-import { Button, Divider, Form, Input } from 'antd';
+import { Button, Divider, Form, Input, Tooltip, notification } from 'antd';
+import {
+	MobileOutlined,
+	LockOutlined,
+	InfoCircleOutlined,
+} from '@ant-design/icons';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 import Layout from '../../components/layout/Layout';
-import { Link } from 'react-router-dom';
-import { variants } from '../../App';
 import useAuth from '../../hooks/useAuth';
+import { BD_PHONE_REGEX, variants } from '../../helper/misc';
 
 interface InputValues {
-	name: string;
+	phone: string;
 	password: string;
 }
 
@@ -24,8 +29,19 @@ const tailLayout = {
 const LoginScreen: React.FC = () => {
 	const { login, loading } = useAuth();
 
-	const onFinish = (values: InputValues) => {
-		console.log(values);
+	const onFinish = async ({ phone, password }: InputValues) => {
+		try {
+			await login({
+				variables: {
+					phone,
+					password,
+				},
+			});
+
+			notification.success({ message: 'successfully logged in' });
+		} catch (error) {
+			notification.error({ message: error.message });
+		}
 	};
 
 	return (
@@ -41,21 +57,43 @@ const LoginScreen: React.FC = () => {
 				<Form
 					{...layout}
 					name='basic'
-					initialValues={{ number: '', password: '' }}
+					initialValues={{ phone: '', password: '' }}
 					onFinish={onFinish}
 				>
 					<Form.Item
-						name='number'
-						rules={[{ required: true, message: 'Please input your number!' }]}
+						name='phone'
+						rules={[
+							{ required: true, message: 'Please input your number!' },
+							{
+								pattern: BD_PHONE_REGEX,
+								message: 'Phone number eg.(017..)',
+							},
+						]}
 					>
-						<Input placeholder='Enter your phone number' size='large' />
+						<Input
+							prefix={<MobileOutlined />}
+							suffix={
+								<Tooltip title='Your 11 digit phone number'>
+									<InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+								</Tooltip>
+							}
+							placeholder='Enter your phone number'
+							size='large'
+						/>
 					</Form.Item>
 
 					<Form.Item
 						name='password'
-						rules={[{ required: true, message: 'Please input your password!' }]}
+						rules={[
+							{ required: true, message: 'Please input your password!' },
+							{ min: 6, message: 'Password must be 6 charecters and above' },
+						]}
 					>
-						<Input.Password placeholder='Password' size='large' />
+						<Input.Password
+							prefix={<LockOutlined />}
+							placeholder='Password'
+							size='large'
+						/>
 					</Form.Item>
 
 					<Form.Item {...tailLayout}>
@@ -85,7 +123,7 @@ const LoginScreen: React.FC = () => {
 					</Button>
 				</Link>
 				<p className='m-t-15 text-center'>
-					Don't have an account? <Link to='/profile/eee'>Sign up</Link>
+					Don't have an account? <Link to='/register'>Sign up</Link>
 				</p>
 			</motion.div>
 		</Layout>

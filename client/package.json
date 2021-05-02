@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@ant-design/icons": "^4.6.2",
 		"@apollo/client": "^3.3.16",
 		"antd": "^4.15.4",
 		"framer-motion": "^4.1.11",
