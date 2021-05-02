@@ -1,8 +1,11 @@
 import React from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import { motion } from 'framer-motion';
 
 import Layout from '../../components/layout/Layout';
+import { Link } from 'react-router-dom';
+import { variants } from '../../App';
+import useAuth from '../../hooks/useAuth';
 
 interface InputValues {
 	name: string;
@@ -15,17 +18,25 @@ const layout = {
 };
 
 const tailLayout = {
-	wrapperCol: { offset: 0, span: 24 },
+	wrapperCol: { span: 24 },
 };
 
 const LoginScreen: React.FC = () => {
+	const { login, loading } = useAuth();
+
 	const onFinish = (values: InputValues) => {
 		console.log(values);
 	};
 
 	return (
 		<Layout className='login' title='Sign In'>
-			<motion.div className='login__space'>
+			<motion.div
+				className='login__space'
+				variants={variants}
+				initial='hidden'
+				animate='visible'
+				exit='exit'
+			>
 				<h1>Login</h1>
 				<Form
 					{...layout}
@@ -48,11 +59,34 @@ const LoginScreen: React.FC = () => {
 					</Form.Item>
 
 					<Form.Item {...tailLayout}>
-						<Button type='primary' size='large' htmlType='submit' block>
+						<Button
+							type='primary'
+							loading={loading}
+							size='large'
+							htmlType='submit'
+							block
+						>
 							Sign in with password
 						</Button>
 					</Form.Item>
 				</Form>
+				<Divider style={{ borderColor: '#a7a7a7' }} plain>
+					or
+				</Divider>
+				<Link to='/login/others'>
+					<Button
+						type='default'
+						loading={loading}
+						size='large'
+						htmlType='button'
+						block
+					>
+						Sign in via other means instead!
+					</Button>
+				</Link>
+				<p className='m-t-15 text-center'>
+					Don't have an account? <Link to='/profile/eee'>Sign up</Link>
+				</p>
 			</motion.div>
 		</Layout>
 	);

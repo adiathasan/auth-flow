@@ -1,28 +1,34 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 
 import ProfileScreen from '../../screens/profileScreen/ProfileScreen';
 import LoginScreen from '../../screens/loginScreen/LoginScreen';
 import AuthRoute from './AuthRoutes';
+import Error from '../../screens/error/Error';
 
 const AppRoutes: React.FC = () => {
+	const location = useLocation();
+
 	return (
-		<Switch>
-			{/* authenticated routes */}
-			<AuthRoute path='/profile/:id' component={ProfileScreen} exact />
+		<AnimatePresence exitBeforeEnter>
+			<Switch location={location} key={location.key}>
+				{/* authenticated routes */}
+				<AuthRoute path='/profile/:id' component={ProfileScreen} exact />
 
-			{/* common routes */}
+				{/* common routes */}
 
-			<Route path='/login' component={LoginScreen} exact />
+				<Route path='/login' component={LoginScreen} exact />
 
-			{/* redirects */}
+				{/* redirects */}
 
-			<Redirect path='/' to='/login' exact />
+				<Redirect path='/' to='/login' exact />
 
-			{/* 404 */}
+				{/* 404 */}
 
-			<Route component={() => <h1>OOPS || 404 page</h1>} />
-		</Switch>
+				<Route component={Error} />
+			</Switch>
+		</AnimatePresence>
 	);
 };
 

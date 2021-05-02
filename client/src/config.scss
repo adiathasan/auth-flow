@@ -16,3 +16,27 @@ $breakpoints: (
         + "Please make sure it is defined in `$breakpoints` map.";
 	}
 }
+
+// utils
+
+$spaceamounts: (5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100);
+
+$sides: (top, bottom, left, right);
+
+@each $space in $spaceamounts {
+	@each $side in $sides {
+		.m-#{str-slice($side, 0, 1)}-#{$space} {
+			margin-#{$side}: #{$space}px !important;
+		}
+
+		.p-#{str-slice($side, 0, 1)}-#{$space} {
+			padding-#{$side}: #{$space}px !important;
+		}
+	}
+}
+
+// text
+
+.text-center {
+	text-align: center;
+}
