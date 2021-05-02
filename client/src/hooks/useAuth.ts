@@ -1,7 +1,7 @@
 import { Dispatch, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { LOGIN_USER } from '../graphql/mutations/loginMutation';
 import { Action, ADD_AUTH, Auth, Store } from '../global/types';
@@ -24,13 +24,13 @@ const useAuth = () => {
 		if (auth) {
 			replace(`/profile/${auth.userId}`);
 		}
-	}, [auth]);
+	}, [auth, replace]);
 
 	useEffect(() => {
 		if (data) {
 			dispatch({ type: ADD_AUTH, payload: data.login });
 		}
-	}, [data]);
+	}, [data, dispatch]);
 
 	return { login, loading, registerLoading, register };
 };

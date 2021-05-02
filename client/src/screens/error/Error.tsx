@@ -1,5 +1,5 @@
 import { Result, Button } from 'antd';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 
 const Error = () => {

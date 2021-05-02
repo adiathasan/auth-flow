@@ -1,15 +1,25 @@
-import React from 'react';
-import { Button, Divider, Form, Input, Tooltip, notification } from 'antd';
+import React, { useState } from 'react';
+import {
+	Button,
+	Divider,
+	Form,
+	Input,
+	Tooltip,
+	notification,
+	message,
+} from 'antd';
 import {
 	MobileOutlined,
 	LockOutlined,
 	InfoCircleOutlined,
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import Layout from '../../components/layout/Layout';
+import FromLink from '../../components/common/FormLink';
 import useAuth from '../../hooks/useAuth';
+import useOtp from '../../hooks/useOtp';
 import { BD_PHONE_REGEX, variants } from '../../helper/misc';
 
 interface InputValues {
@@ -26,8 +36,20 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 };
 
+const styles = { borderColor: '#a7a7a7' };
+
 const LoginScreen: React.FC = () => {
+	const [isOthers, setIsOthers] = useState(false);
+
+	const { push } = useHistory();
+
 	const { login, loading } = useAuth();
+
+	const { getOtp, otpLoading } = useOtp();
+
+	/*
+		@normal func (login)
+	*/
 
 	const onFinish = async ({ phone, password }: InputValues) => {
 		try {
@@ -38,7 +60,42 @@ const LoginScreen: React.FC = () => {
 				},
 			});
 
-			notification.success({ message: 'Successfully logged in' });
+			notification.success({ message: 'Successfully logged in', duration: 3 });
+		} catch (error) {
+			notification.error({ message: error.message });
+		}
+	};
+
+	/*
+		@others way func (otp)
+	*/
+
+	const onFinishOthers = async ({ phone }: { phone: string }) => {
+		try {
+			const hide = message.loading('Sending OTP code', 0);
+
+			const { data } = await getOtp({
+				variables: {
+					type: 'email',
+					payload: phone,
+				},
+			});
+
+			hide();
+
+			notification.info({
+				message: 'OTP has been sent to you email',
+				duration: 3,
+			});
+
+			/*
+				@sending otp code via state for just mocking 
+			*/
+
+			push({
+				pathname: '/otp/verify',
+				state: { phone, code: data?.getOtp.code },
+			});
 		} catch (error) {
 			notification.error({ message: error.message });
 		}
@@ -57,8 +114,8 @@ const LoginScreen: React.FC = () => {
 				<Form
 					{...layout}
 					name='basic'
-					initialValues={{ phone: '', password: '' }}
-					onFinish={onFinish}
+					initialValues={isOthers ? { phone: '' } : { phone: '', password: '' }}
+					onFinish={isOthers ? onFinishOthers : onFinish}
 				>
 					<Form.Item
 						name='phone'
@@ -81,50 +138,53 @@ const LoginScreen: React.FC = () => {
 							size='large'
 						/>
 					</Form.Item>
-
-					<Form.Item
-						name='password'
-						rules={[
-							{ required: true, message: 'Please input your password!' },
-							{ min: 6, message: 'Password must be 6 charecters and above' },
-						]}
-					>
-						<Input.Password
-							prefix={<LockOutlined />}
-							placeholder='Password'
-							size='large'
-						/>
-					</Form.Item>
+					{!isOthers && (
+						<Form.Item
+							name='password'
+							rules={[
+								{ required: true, message: 'Please input your password!' },
+								{ min: 6, message: 'Password must be 6 charecters and above' },
+							]}
+						>
+							<Input.Password
+								prefix={<LockOutlined />}
+								placeholder='Password'
+								size='large'
+							/>
+						</Form.Item>
+					)}
 
 					<Form.Item {...tailLayout}>
 						<Button
 							type='primary'
-							loading={loading}
+							loading={loading || otpLoading}
 							size='large'
 							htmlType='submit'
 							block
 						>
-							Sign in with password
+							Sign in {!isOthers && 'with password'}
 						</Button>
 					</Form.Item>
 				</Form>
-				<Divider style={{ borderColor: '#a7a7a7' }} plain>
+				<Divider style={styles} plain>
 					or
 				</Divider>
-				<Link to='/login/others'>
-					<Button
-						type='default'
-						loading={loading}
-						size='large'
-						htmlType='button'
-						block
-					>
-						Sign in via other means instead!
-					</Button>
-				</Link>
-				<p className='m-t-15 text-center'>
-					Don't have an account? <Link to='/register'>Sign up</Link>
-				</p>
+				<Button
+					onClick={() => setIsOthers((old) => !old)}
+					type='default'
+					loading={loading || otpLoading}
+					size='large'
+					htmlType='button'
+					block
+				>
+					{isOthers
+						? 'Sign in with password'
+						: 'Sign in via other means instead!'}
+				</Button>
+
+				<FromLink link='/register' linkPrefix="Don't have an account?">
+					Sign up
+				</FromLink>
 			</motion.div>
 		</Layout>
 	);

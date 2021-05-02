@@ -8,10 +8,11 @@ import {
 } from '@ant-design/icons';
 import { Form, Input, Tooltip, Button, notification } from 'antd';
 import { motion } from 'framer-motion';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import Layout from '../../components/layout/Layout';
 import useAuth from '../../hooks/useAuth';
+import FromLink from '../../components/common/FormLink';
 import { variants, BD_PHONE_REGEX } from '../../helper/misc';
 
 interface InputValues {
@@ -153,9 +154,9 @@ const RegisterScreen: React.FC = () => {
 					</Form.Item>
 				</Form>
 
-				<p className='m-t-15 text-center'>
-					Already have an account? <Link to='/login'>Login</Link>
-				</p>
+				<FromLink link='/login' linkPrefix='Already have an account?'>
+					Login
+				</FromLink>
 			</motion.div>
 		</Layout>
 	);

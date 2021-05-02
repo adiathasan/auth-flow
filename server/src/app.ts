@@ -214,29 +214,14 @@ const resolvers = {
 		},
 		verifyOtp: async (
 			_parent: any,
-			{ input: { type, payload, code } }: VerifyInput
+			{ input: { type: _t, payload, code } }: VerifyInput
 		) => {
 			try {
 				const isNotVerified = cashedOtp !== code;
 
 				if (isNotVerified) throw new Error('OTP code not valid. Try again');
 
-				let obj = {};
-
-				switch (type) {
-					case 'email':
-						obj = { email: payload };
-
-						break;
-					case 'sms':
-						obj = { phone: payload };
-
-						break;
-					default:
-						break;
-				}
-
-				const user = await User.findOne(obj);
+				const user = await User.findOne({ phone: payload });
 
 				if (user) {
 					const token = getToken({ userId: user.id });

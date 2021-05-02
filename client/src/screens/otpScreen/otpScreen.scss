@@ -1,0 +1,37 @@
+@import '../../config.scss';
+
+.otp {
+	&_header {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		font-size: x-small;
+
+		@include respond-to(sm) {
+			grid-template-columns: repeat(4, 92px);
+			font-size: 1em;
+		}
+	}
+
+	form {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+		gap: 1rem;
+		margin-bottom: 1rem;
+
+		@include respond-to(md) {
+			grid-template-columns: repeat(4, 92px);
+		}
+
+		input {
+			padding: 1rem;
+			border-radius: 6px;
+			font-size: x-large;
+			outline: none;
+
+			@include respond-to(md) {
+				padding: 2rem;
+			}
+		}
+	}
+}
