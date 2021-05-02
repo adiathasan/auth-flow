@@ -1,0 +1,14 @@
+@import '../../config.scss';
+
+.layout {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 80vh;
+	padding: 2rem;
+
+	&__child {
+		width: 360px;
+		max-width: 100%;
+	}
+}

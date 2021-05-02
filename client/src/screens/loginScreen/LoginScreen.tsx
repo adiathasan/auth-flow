@@ -1,44 +1,60 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
+import React from 'react';
+import { Button, Form, Input } from 'antd';
+import { motion } from 'framer-motion';
 
-import { useDispatch } from 'react-redux';
-import { Action, ADD_AUTH } from '../../global/types';
-import { Dispatch } from 'redux';
+import Layout from '../../components/layout/Layout';
+
+interface InputValues {
+	name: string;
+	password: string;
+}
+
+const layout = {
+	labelCol: { span: 24 },
+	wrapperCol: { span: 24 },
+};
+
+const tailLayout = {
+	wrapperCol: { offset: 0, span: 24 },
+};
 
 const LoginScreen: React.FC = () => {
-	const dispatch = useDispatch<Dispatch<Action>>();
-
-	const [value, setValue] = useState('');
+	const onFinish = (values: InputValues) => {
+		console.log(values);
+	};
 
 	return (
-		<div className='login'>
-			<h1>Login</h1>
+		<Layout className='login' title='Sign In'>
+			<motion.div className='login__space'>
+				<h1>Login</h1>
+				<Form
+					{...layout}
+					name='basic'
+					initialValues={{ number: '', password: '' }}
+					onFinish={onFinish}
+				>
+					<Form.Item
+						name='number'
+						rules={[{ required: true, message: 'Please input your number!' }]}
+					>
+						<Input placeholder='Enter your phone number' size='large' />
+					</Form.Item>
 
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					console.log('//');
+					<Form.Item
+						name='password'
+						rules={[{ required: true, message: 'Please input your password!' }]}
+					>
+						<Input.Password placeholder='Password' size='large' />
+					</Form.Item>
 
-					dispatch({
-						type: ADD_AUTH,
-						payload: {
-							expiresIn: 20,
-							token: value,
-						},
-					});
-				}}
-			>
-				<input
-					type='text'
-					onChange={(e) => setValue(e.target.value)}
-					value={value}
-					placeholder='tokenize me'
-				/>
-				<Button type='primary' typeof='submit'>
-					submit
-				</Button>
-			</form>
-		</div>
+					<Form.Item {...tailLayout}>
+						<Button type='primary' size='large' htmlType='submit' block>
+							Sign in with password
+						</Button>
+					</Form.Item>
+				</Form>
+			</motion.div>
+		</Layout>
 	);
 };
 

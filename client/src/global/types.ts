@@ -8,13 +8,14 @@ export const REMOVE_USER = 'REMOVE_USER';
 
 export interface Auth {
 	token: string;
+	userId: string;
 	expiresIn: number;
 }
 
 export interface Store {
-	auth: Auth;
+	auth: Auth | null;
 }
 
 export type Action =
 	| { type: typeof ADD_AUTH; payload: Auth }
-	| { type: typeof REMOVE_AUTH; payload: null };
+	| { type: typeof REMOVE_AUTH };

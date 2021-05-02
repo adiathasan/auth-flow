@@ -6,7 +6,7 @@ export const userLoginReducer = (state: Auth | null = null, action: Action) => {
 			return { ...action.payload };
 
 		case REMOVE_AUTH:
-			return action.payload;
+			return null;
 
 		default:
 			return state;
