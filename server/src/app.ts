@@ -55,6 +55,7 @@ const typeDefs = gql`
 
 	type AuthData {
 		token: String!
+		userId: String!
 		expiresIn: Int!
 	}
 
@@ -170,6 +171,7 @@ const resolvers = {
 				return {
 					token,
 					expiresIn: JWT_EXPIRES_IN_DAYS,
+					userId: user.id,
 				};
 			} catch (error) {
 				throw error;
@@ -242,6 +244,7 @@ const resolvers = {
 					return {
 						token,
 						expiresIn: JWT_EXPIRES_IN_DAYS,
+						userId: user.id,
 					};
 				}
 
