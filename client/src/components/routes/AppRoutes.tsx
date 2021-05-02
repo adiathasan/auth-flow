@@ -4,6 +4,7 @@ import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 
 import ProfileScreen from '../../screens/profileScreen/ProfileScreen';
 import LoginScreen from '../../screens/loginScreen/LoginScreen';
+import RegisterScreen from '../../screens/registerScreen/RegisterScreen';
 import AuthRoute from './AuthRoutes';
 import Error from '../../screens/error/Error';
 
@@ -19,6 +20,8 @@ const AppRoutes: React.FC = () => {
 				{/* common routes */}
 
 				<Route path='/login' component={LoginScreen} exact />
+
+				<Route path='/register' component={RegisterScreen} exact />
 
 				{/* redirects */}
 

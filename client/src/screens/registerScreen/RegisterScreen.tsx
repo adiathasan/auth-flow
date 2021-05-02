@@ -1,20 +1,24 @@
 import React from 'react';
-import { Button, Divider, Form, Input, Tooltip, notification } from 'antd';
 import {
 	MobileOutlined,
-	LockOutlined,
 	InfoCircleOutlined,
+	LockOutlined,
+	MailOutlined,
+	UserOutlined,
 } from '@ant-design/icons';
+import { Form, Input, Tooltip, Button, notification } from 'antd';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import Layout from '../../components/layout/Layout';
 import useAuth from '../../hooks/useAuth';
-import { BD_PHONE_REGEX, variants } from '../../helper/misc';
+import { variants, BD_PHONE_REGEX } from '../../helper/misc';
 
 interface InputValues {
 	phone: string;
+	email: string;
 	password: string;
+	name: string;
 }
 
 const layout = {
@@ -26,41 +30,47 @@ const tailLayout = {
 	wrapperCol: { span: 24 },
 };
 
-const LoginScreen: React.FC = () => {
-	const { login, loading } = useAuth();
+const RegisterScreen: React.FC = () => {
+	const { registerLoading, register } = useAuth();
 
-	const onFinish = async ({ phone, password }: InputValues) => {
+	const { push } = useHistory();
+
+	const onFinish = async ({ phone, password, name, email }: InputValues) => {
 		try {
-			await login({
+			await register({
 				variables: {
 					phone,
 					password,
+					name,
+					email,
 				},
 			});
 
-			notification.success({ message: 'Successfully logged in' });
+			notification.success({ message: 'Successfully signed up' });
+			push('/login');
 		} catch (error) {
 			notification.error({ message: error.message });
 		}
 	};
 
 	return (
-		<Layout className='login' title='Sign In'>
+		<Layout title='Sign up'>
 			<motion.div
-				className='login__space'
+				className='register__space'
 				variants={variants}
 				initial='hidden'
 				animate='visible'
 				exit='exit'
 			>
-				<h1>Login</h1>
+				<h1>Create a new account</h1>
 				<Form
 					{...layout}
 					name='basic'
-					initialValues={{ phone: '', password: '' }}
+					initialValues={{ phone: '', password: '', name: '', email: '' }}
 					onFinish={onFinish}
 				>
 					<Form.Item
+						requiredMark
 						name='phone'
 						rules={[
 							{ required: true, message: 'Please input your number!' },
@@ -74,10 +84,44 @@ const LoginScreen: React.FC = () => {
 							prefix={<MobileOutlined />}
 							suffix={
 								<Tooltip title='Your 11 digit phone number'>
-									<InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+									<InfoCircleOutlined />
 								</Tooltip>
 							}
 							placeholder='Enter your phone number'
+							size='large'
+						/>
+					</Form.Item>
+
+					<Form.Item
+						requiredMark
+						name='name'
+						rules={[{ required: true, message: 'Please input your name!' }]}
+					>
+						<Input
+							prefix={<UserOutlined />}
+							suffix={
+								<Tooltip title='Your name for the record'>
+									<InfoCircleOutlined />
+								</Tooltip>
+							}
+							placeholder='Enter your name'
+							size='large'
+						/>
+					</Form.Item>
+
+					<Form.Item
+						requiredMark
+						name='email'
+						rules={[{ required: true, message: 'Please input your email!' }]}
+					>
+						<Input
+							prefix={<MailOutlined />}
+							suffix={
+								<Tooltip title='We will send you email'>
+									<InfoCircleOutlined />
+								</Tooltip>
+							}
+							placeholder='Enter your email'
 							size='large'
 						/>
 					</Form.Item>
@@ -99,35 +143,22 @@ const LoginScreen: React.FC = () => {
 					<Form.Item {...tailLayout}>
 						<Button
 							type='primary'
-							loading={loading}
+							loading={registerLoading}
 							size='large'
 							htmlType='submit'
 							block
 						>
-							Sign in with password
+							Sign Up
 						</Button>
 					</Form.Item>
 				</Form>
-				<Divider style={{ borderColor: '#a7a7a7' }} plain>
-					or
-				</Divider>
-				<Link to='/login/others'>
-					<Button
-						type='default'
-						loading={loading}
-						size='large'
-						htmlType='button'
-						block
-					>
-						Sign in via other means instead!
-					</Button>
-				</Link>
+
 				<p className='m-t-15 text-center'>
-					Don't have an account? <Link to='/register'>Sign up</Link>
+					Already have an account? <Link to='/login'>Login</Link>
 				</p>
 			</motion.div>
 		</Layout>
 	);
 };
 
-export default LoginScreen;
+export default RegisterScreen;

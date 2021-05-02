@@ -1,10 +1,11 @@
 import { Dispatch, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { LOGIN_USER } from '../graphql/mutations/loginMutation';
 import { Action, ADD_AUTH, Auth, Store } from '../global/types';
-import { useHistory } from 'react-router';
+import { REGEISTER_USER } from '../graphql/mutations/registerMutation';
 
 const useAuth = () => {
 	const { replace } = useHistory();
@@ -14,6 +15,10 @@ const useAuth = () => {
 	const dispatch = useDispatch<Dispatch<Action>>();
 
 	const [login, { loading, data }] = useMutation<{ login: Auth }>(LOGIN_USER);
+
+	const [register, { loading: registerLoading }] = useMutation<{
+		createUser: { _id: string };
+	}>(REGEISTER_USER);
 
 	useEffect(() => {
 		if (auth) {
@@ -27,7 +32,7 @@ const useAuth = () => {
 		}
 	}, [data]);
 
-	return { login, loading };
+	return { login, loading, registerLoading, register };
 };
 
 export default useAuth;
