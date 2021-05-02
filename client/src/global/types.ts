@@ -12,11 +12,19 @@ export interface Auth {
 	expiresIn: number;
 	__typename: string;
 }
+export interface User {
+	_id: string;
+	name: string;
+	email: string;
+}
 
 export interface Store {
 	auth: Auth | null;
+	user: User | null;
 }
 
 export type Action =
 	| { type: typeof ADD_AUTH; payload: Auth }
-	| { type: typeof REMOVE_AUTH };
+	| { type: typeof ADD_USER; payload: User }
+	| { type: typeof REMOVE_AUTH }
+	| { type: typeof REMOVE_USER };

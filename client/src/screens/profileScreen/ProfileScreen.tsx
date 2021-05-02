@@ -1,24 +1,99 @@
-import React, { Dispatch } from 'react';
-import { Button } from 'antd';
-import { useDispatch } from 'react-redux';
+import React, { Dispatch, useEffect } from 'react';
+import { Button, Empty, message, notification, Skeleton, Tooltip } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-import { Action, REMOVE_AUTH } from '../../global/types';
+import {
+	Action,
+	ADD_USER,
+	REMOVE_AUTH,
+	REMOVE_USER,
+	Store,
+} from '../../global/types';
+import './profileScreen.scss';
 import Layout from '../../components/layout/Layout';
+import useProfle from '../../hooks/useProfle';
+import { motion } from 'framer-motion';
+import { variants } from '../../helper/misc';
 
 const ProfileScreen: React.FC = () => {
+	const user = useSelector((state: Store) => state.user);
+
 	const dispatch = useDispatch<Dispatch<Action>>();
+
+	const params = useParams<{ id: string }>();
+
+	const { data, error, loading } = useProfle(params.id);
+
+	const logout = () => {
+		dispatch({ type: REMOVE_USER });
+		dispatch({ type: REMOVE_AUTH });
+	};
+
+	useEffect(() => {
+		if (loading) {
+			message.loading('geting user...');
+			return;
+		}
+
+		message.destroy();
+	}, [loading]);
+
+	useEffect(() => {
+		if (data) {
+			dispatch({ type: ADD_USER, payload: data.user });
+		}
+	}, [data, dispatch]);
+
+	useEffect(() => {
+		if (error) {
+			notification.error({ message: error.message });
+		}
+	}, [error]);
 
 	return (
 		<Layout title='Profile'>
-			<h1>Profile</h1>
-			<Button
-				type='dashed'
-				onClick={() => {
-					dispatch({ type: REMOVE_AUTH });
-				}}
+			<motion.div
+				variants={variants}
+				initial='hidden'
+				animate='visible'
+				exit='exit'
 			>
-				Logout
-			</Button>
+				<Skeleton loading={loading} active>
+					{user ? (
+						<div className='profile'>
+							<Button
+								icon={<LoginOutlined />}
+								type='ghost'
+								onClick={logout}
+								block
+							>
+								Logout
+							</Button>
+							<Tooltip title={user._id}>
+								<motion.main
+									variants={variants}
+									initial='hidden'
+									animate='visible'
+									exit='exit'
+								>
+									<section>
+										<div>name</div>
+										<div>{user.name}</div>
+									</section>
+									<section>
+										<div>email</div>
+										<div>{user.email}</div>
+									</section>
+								</motion.main>
+							</Tooltip>
+						</div>
+					) : (
+						<Empty />
+					)}
+				</Skeleton>
+			</motion.div>
 		</Layout>
 	);
 };

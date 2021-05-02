@@ -1,0 +1,27 @@
+.profile {
+	padding: 2rem;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	box-shadow: 0 8px 10px 0 rgba($color: #000000, $alpha: 0.1);
+	background: linear-gradient(45deg, #ffffff, #04a3ff11);
+
+	font-size: medium;
+
+	main {
+		margin-top: 1rem;
+		grid-template-columns: 1fr;
+		display: grid;
+		gap: 1rem;
+
+		section {
+			display: grid;
+			align-items: center;
+			justify-items: center;
+			grid-template-columns: 1fr 1fr;
+			padding: 1rem;
+			border-radius: 10px;
+			border: 1px solid #ddd;
+			text-transform: uppercase;
+		}
+	}
+}
