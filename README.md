@@ -13,7 +13,7 @@ It will install all the dependencies and dev dependencies.
 ### `npm run dev`
 
 It will run locally with typescript.
-Also mongodb community edition has to be locally installed or if you don't want that just use `mongodb+srv://adiat-hasan:qweqwe@cluster0.blejq.mongodb.net/auth?retryWrites=true&w=majority` in your .env file with the key `MONGO_URI_KEY`.
+Also mongodb community edition has to be locally installed or if you don't want that just use `mongodb+srv://adiat-hasan:qweqwe@cluster0.blejq.mongodb.net/auth?retryWrites=true` in your .env file with the key `MONGO_URI_KEY`.
 
 ### `npm run build`
 
