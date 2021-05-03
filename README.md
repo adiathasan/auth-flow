@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Getting Started with React, node and graphQl
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and it's mock server was created with node.js, mongodb and GraphQL.
 
