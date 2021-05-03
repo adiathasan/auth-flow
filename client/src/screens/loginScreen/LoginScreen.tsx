@@ -97,6 +97,7 @@ const LoginScreen: React.FC = () => {
 				state: { phone, code: data?.getOtp.code },
 			});
 		} catch (error) {
+			message.destroy();
 			notification.error({ message: error.message });
 		}
 	};

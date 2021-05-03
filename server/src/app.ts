@@ -177,8 +177,12 @@ const resolvers = {
 				throw error;
 			}
 		},
-		getOtp: async (_parent: any, { input: { type } }: OtpInput) => {
+		getOtp: async (_parent: any, { input: { type, payload } }: OtpInput) => {
 			try {
+				const user = await User.findOne({ phone: payload });
+
+				if (!user) throw new Error('User not found to send OTP');
+
 				const OTP_NUM = 4;
 
 				switch (type) {
@@ -217,6 +221,10 @@ const resolvers = {
 			{ input: { type: _t, payload, code } }: VerifyInput
 		) => {
 			try {
+				const hasExpired = cashedOtp === 0;
+
+				if (hasExpired) throw new Error('OTP has expired. Try again.');
+
 				const isNotVerified = cashedOtp !== code;
 
 				if (isNotVerified) throw new Error('OTP code not valid. Try again');

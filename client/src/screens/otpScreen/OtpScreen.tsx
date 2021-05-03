@@ -101,6 +101,8 @@ const OtpScreen: React.FC = () => {
 		}
 	};
 
+	// steps OTP insert
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		switch (event.target.name) {
 			case 'one':
@@ -126,7 +128,7 @@ const OtpScreen: React.FC = () => {
 		}
 	};
 
-	// resend
+	// resend OTP
 
 	const handleResendOtp = async () => {
 		reset();
