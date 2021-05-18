@@ -1,35 +1,27 @@
-import React, { Dispatch, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Empty, message, notification, Skeleton, Tooltip } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import {
-	Action,
-	ADD_USER,
-	REMOVE_AUTH,
-	REMOVE_USER,
-	Store,
-} from '../../global/types';
+import { ADD_USER, Store } from '../../global/types';
 import './profileScreen.scss';
 import Layout from '../../components/layout/Layout';
 import useProfle from '../../hooks/useProfle';
 import { motion } from 'framer-motion';
 import { variants } from '../../helper/misc';
+import { logoutAction } from '../../global/actions/authActions';
 
 const ProfileScreen: React.FC = () => {
 	const user = useSelector((state: Store) => state.user);
 
-	const dispatch = useDispatch<Dispatch<Action>>();
+	const dispatch = useDispatch();
 
 	const params = useParams<{ id: string }>();
 
 	const { data, error, loading } = useProfle(params.id);
 
-	const logout = () => {
-		dispatch({ type: REMOVE_USER });
-		dispatch({ type: REMOVE_AUTH });
-	};
+	const logout = () => dispatch(logoutAction());
 
 	useEffect(() => {
 		if (loading) {

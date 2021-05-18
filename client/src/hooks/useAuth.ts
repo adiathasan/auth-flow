@@ -1,24 +1,26 @@
-import { Dispatch, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { LOGIN_USER } from '../graphql/mutations/loginMutation';
-import { Action, ADD_AUTH, Auth, Store } from '../global/types';
+import { Auth, Store } from '../global/types';
 import { REGEISTER_USER } from '../graphql/mutations/registerMutation';
+import { loginAction } from '../global/actions/authActions';
 
 const useAuth = () => {
 	const { replace } = useHistory();
 
 	const auth = useSelector((state: Store) => state.auth);
 
-	const dispatch = useDispatch<Dispatch<Action>>();
+	const dispatch = useDispatch();
 
 	const [login, { loading, data }] = useMutation<{ login: Auth }>(LOGIN_USER);
 
-	const [register, { loading: registerLoading }] = useMutation<{
-		createUser: { _id: string };
-	}>(REGEISTER_USER);
+	const [register, { loading: registerLoading }] =
+		useMutation<{
+			createUser: { _id: string };
+		}>(REGEISTER_USER);
 
 	useEffect(() => {
 		if (auth) {
@@ -28,7 +30,7 @@ const useAuth = () => {
 
 	useEffect(() => {
 		if (data) {
-			dispatch({ type: ADD_AUTH, payload: data.login });
+			dispatch(loginAction(data.login));
 		}
 	}, [data, dispatch]);
 
